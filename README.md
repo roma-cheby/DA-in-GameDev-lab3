@@ -55,34 +55,35 @@
 - Сделал 27 копий модели
 ![image](https://user-images.githubusercontent.com/105049918/201992908-2713ca1e-8061-41cc-ae4b-2c3524bd9ef3.png)
 
-
-
-
 ## Задание 2
 ### Должна ли величина loss стремиться к нулю при изменении исходных данных? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ.
 
-- Перечисленные в этом туториале действия могут быть выполнены запуском на исполнение скрипт-файла, доступного [в репозитории](https://github.com/Den1sovDm1triy/hfss-scripting/blob/main/ScreatingSphereInAEDT.py).
-- Для запуска скрипт-файла откройте Ansys Electronics Desktop. Перейдите во вкладку [Automation] - [Run Script] - [Выберите файл с именем ScreatingSphereInAEDT.py из репозитория].
 
-```py
 
-import ScriptEnv
-ScriptEnv.Initialize("Ansoft.ElectronicsDesktop")
-oDesktop.RestoreWindow()
-oProject = oDesktop.NewProject()
-oProject.Rename("C:/Users/denisov.dv/Documents/Ansoft/SphereDIffraction.aedt", True)
-oProject.InsertDesign("HFSS", "HFSSDesign1", "HFSS Terminal Network", "")
-oDesign = oProject.SetActiveDesign("HFSSDesign1")
-oEditor = oDesign.SetActiveEditor("3D Modeler")
-oEditor.CreateSphere(
-	[
-		"NAME:SphereParameters",
-		"XCenter:="		, "0mm",
-		"YCenter:="		, "0mm",
-		"ZCenter:="		, "0mm",
-		"Radius:="		, "1.0770329614269mm"
-	], 
-)
+```
+behaviors: #
+  RollerBall: #Объект
+    trainer_type: ppo #Тип тренера
+    hyperparameters: # Гиперпараметры
+      batch_size: 10 # Количество опытов в каждой итерации градиентного спуска
+      buffer_size: 100 # Количество опытов, которые необходимо собрать перед обновлением модели политики
+      learning_rate: 3.0e-4 # Начальная скорость обучения для градиентного спуска. Соответствует силе каждого шага обновления градиентного спуска
+      beta: 5.0e-4 # Сила регуляризации энтропии, которая делает политику «более случайной»
+      epsilon: 0.2 # Допустимый порог расхождения между старой и новой политикой при обновлении градиентного спуска
+      lambd: 0.99 # Параметр регуляризации
+      num_epoch: 3 # Количество проходов через буфер опыта при выполнении оптимизации градиентного спуска
+      learning_rate_schedule: linear # Определяет, как скорость обучения изменяется с течением времени
+    network_settings: # Спецификации сети
+      normalize: false # Применяется ли нормализация к входным данным векторных наблюдений
+      hidden_units: 128 # Количество единиц в скрытых слоях нейронной сети
+      num_layers: 2 # Количество скрытых слоев в нейронной сети
+    reward_signals: # Настройки сигналов вознаграждения
+      extrinsic: # Внешние награды
+        gamma: 0.99 # Фактор скидки для будущих вознаграждений, поступающих из окружающей среды
+        strength: 1.0 # Коэффициент, на который умножается вознаграждение, данное средой
+    max_steps: 500000 # Общее количество шагов
+    time_horizon: 64 # Сколько шагов опыта необходимо собрать для каждого агента, прежде чем добавить его в буфер опыта
+    summary_freq: 10000 # Количество опытов, которое необходимо собрать перед созданием и отображением статистики обучения
 
 ```
 
