@@ -89,28 +89,73 @@ behaviors: #
 
 ## Задание 3
 ### Доработайте сцену и обучите ML-Agent таким образом, чтобы шар перемещался между двумя кубами разного цвета. Кубы должны, как и в первом задании, случайно изменять координаты на плоскости.
-![video](https://user-images.githubusercontent.com/105049918/202019445-1f81d197-8457-41cd-bdb7-097f6a337aa3.mp4)
+- Результат
+![ezgif-4-c4559e9e2e](https://user-images.githubusercontent.com/105049918/202020222-4e44e3b3-e3d9-4a58-97da-fe7f7eb57c01.gif)
+- Настройки Юнити
+![image](https://user-images.githubusercontent.com/105049918/202020844-5a441eb8-da82-4263-b0ea-9003dba10364.png)
+![image](https://user-images.githubusercontent.com/105049918/202020897-d4cf133e-e7fb-4509-9823-44bd8ef36cd7.png)
+- Переделанный код
+```C#
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Actuators;
 
-```py
+public class RollerAgent : Agent
+{
+    Rigidbody rBody;
+    // Start is called before the first frame update
+    void Start()
+    {
+        rBody = GetComponent<Rigidbody>();
+    }
 
-import ScriptEnv
-ScriptEnv.Initialize("Ansoft.ElectronicsDesktop")
-oDesktop.RestoreWindow()
-oProject = oDesktop.NewProject()
-oProject.Rename("C:/Users/denisov.dv/Documents/Ansoft/SphereDIffraction.aedt", True)
-oProject.InsertDesign("HFSS", "HFSSDesign1", "HFSS Terminal Network", "")
-oDesign = oProject.SetActiveDesign("HFSSDesign1")
-oEditor = oDesign.SetActiveEditor("3D Modeler")
-oEditor.CreateSphere(
-	[
-		"NAME:SphereParameters",
-		"XCenter:="		, "0mm",
-		"YCenter:="		, "0mm",
-		"ZCenter:="		, "0mm",
-		"Radius:="		, "1.0770329614269mm"
-	], 
-)
+    public Transform Target1;
+    public Transform Target2;
+    public override void OnEpisodeBegin()
+    {
+        if (this.transform.localPosition.y < 0)
+        {
+            this.rBody.angularVelocity = Vector3.zero;
+            this.rBody.velocity = Vector3.zero;
+            this.transform.localPosition = new Vector3(0, 0.5f, 0);
+        }
 
+        Target1.localPosition = new Vector3(Random.value * 8-4, 0.5f, Random.value * 8-4);
+        Target2.localPosition = new Vector3(Random.value * 8 - 4, 0.5f, Random.value * 8 - 4);
+    }
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        sensor.AddObservation(Target1.localPosition);
+        sensor.AddObservation(Target2.localPosition);
+        sensor.AddObservation(this.transform.localPosition);
+        sensor.AddObservation(rBody.velocity.x);
+        sensor.AddObservation(rBody.velocity.z);
+    }
+    public float forceMultiplier = 10;
+
+    public override void OnActionReceived(ActionBuffers actionBuffers)
+    {
+        Vector3 controlSignal = Vector3.zero;
+        controlSignal.x = actionBuffers.ContinuousActions[0];
+        controlSignal.z = actionBuffers.ContinuousActions[1];
+        rBody.AddForce(controlSignal * forceMultiplier);
+
+        float distanceToTarget1 = Vector3.Distance(this.transform.localPosition, Target1.localPosition);
+        float distanceToTarget2 = Vector3.Distance(this.transform.localPosition, Target2.localPosition);
+        if (distanceToTarget1 < 1.42f || distanceToTarget2 < 1.42f)
+        {
+            SetReward(1.0f);
+            EndEpisode();
+        }
+        else if (this.transform.localPosition.y < 0)
+        {
+            EndEpisode();
+        }
+    }
+}
 ```
 
 ## Выводы
