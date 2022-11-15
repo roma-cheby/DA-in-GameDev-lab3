@@ -45,7 +45,18 @@
 ![image](https://user-images.githubusercontent.com/105049918/200979224-940480e4-2beb-48b4-a9e6-8f12cbf4e57c.png)
 - Скачал и установил библиотеку torch
 ![image](https://user-images.githubusercontent.com/105049918/200979329-e7104eb1-b292-456d-809f-f4767d80e1c9.png)
-- 
+- Настроил все файлы и скрипты, запустил сцену
+![image](https://user-images.githubusercontent.com/105049918/201990525-27ace069-a489-401f-9327-3eb5bb439abd.png)
+![image](https://user-images.githubusercontent.com/105049918/201990636-a3636b24-fd4d-45c5-9a85-c92befc53e07.png)
+- Сделал 3 копии модели
+![image](https://user-images.githubusercontent.com/105049918/201991317-e5bd6549-ec4c-42e0-83da-244a3632de0c.png)
+- Сделал 9 копий модели
+![image](https://user-images.githubusercontent.com/105049918/201992146-e4a58120-075e-4e62-af7e-7bae5a98a57e.png)
+- Сделал 27 копий модели
+![image](https://user-images.githubusercontent.com/105049918/201992908-2713ca1e-8061-41cc-ae4b-2c3524bd9ef3.png)
+
+
+
 
 ## Задание 2
 ### Должна ли величина loss стремиться к нулю при изменении исходных данных? Ответьте на вопрос, приведите пример выполнения кода, который подтверждает ваш ответ.
